@@ -1,1 +1,81 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulário com Imagem Base64</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    input, textarea {
+      display: block;
+      margin-bottom: 1rem;
+      width: 100%;
+      padding: 0.5rem;
+    }
+    img {
+      max-width: 300px;
+      margin-top: 1rem;
+    }
+    .result {
+      margin-top: 2rem;
+      background: #f0f0f0;
+      padding: 1rem;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Formulário</h1>
+  <form id="dataForm">
+    <input type="text" id="name" placeholder="Nome" required />
+    <input type="text" id="title" placeholder="Título" required />
+    <input type="datetime-local" id="datetime" required />
+    <input type="file" id="image" accept="image/*" required />
+    <button type="submit">Enviar</button>
+  </form>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    const form = document.getElementById('dataForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const title = document.getElementById('title').value;
+      const datetime = document.getElementById('datetime').value;
+      const imageInput = document.getElementById('image');
+      const file = imageInput.files[0];
+
+      if (!file) {
+        alert('Selecione uma imagem!');
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        const base64Image = event.target.result;
+
+        resultDiv.innerHTML = `
+          <h2>Resultado:</h2>
+          <p><strong>Nome:</strong> ${name}</p>
+          <p><strong>Título:</strong> ${title}</p>
+          <p><strong>Data e Hora:</strong> ${datetime}</p>
+          <p><strong>Imagem (base64):</strong></p>
+          <textarea rows="6">${base64Image}</textarea>
+          <img src="${base64Image}" alt="Preview da Imagem" />
+        `;
+      };
+
+      reader.readAsDataURL(file);
+    });
+  </script>
+</body>
+</html>
